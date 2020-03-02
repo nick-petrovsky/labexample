@@ -43,7 +43,7 @@ else()
     set(SDL2_TARGET_LINK_LIBRARIES  
         SDL2d SDL2maind
         user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
-    elseif(UNIX)
+    elseif(UNIX AND NOT APPLE)
     set(SDL2_TARGET_LINK_LIBRARIES dl m pthread SDL2 )
     endif()
 endif()
