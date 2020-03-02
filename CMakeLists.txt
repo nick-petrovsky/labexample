@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.11 )
 
-# Укажем имя проекта как sdl2-demo
+# Г“ГЄГ Г¦ГҐГ¬ ГЁГ¬Гї ГЇГ°Г®ГҐГЄГІГ  ГЄГ ГЄ sdl2-demo
 project( sdl2-demo C CXX)
 
 set(LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
@@ -14,7 +14,7 @@ include(cmake/StaticAnalyzers.cmake)
 set(SDL2_VERSION "2.0.10")
 
 #find_package( SDL2 ${SDL2_VERSION}  )
-find_package( SDL2 QUIETE )
+find_package( SDL2 QUIET )
 if(SDL2_FOUND)
     set (SDL2_TARGET_LINK_LIBRARIES SDL2 )
 #    set (SDL2_TARGET_LINK_LIBRARIES   
