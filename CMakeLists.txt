@@ -1,50 +1,46 @@
 cmake_minimum_required( VERSION 3.11 )
+
+# Укажем имя проекта как sdl2-demo
 project( sdl2-demo C CXX)
 
-include(ExternalProject)
+set(LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
+
+include(cmake/StandardProjectSettings.cmake)
+include(cmake/CompilerWarnings.cmake)
+include(cmake/Sanitizers.cmake)
+enable_sanitizers(project_options)
+include(cmake/StaticAnalyzers.cmake)
 
 set(SDL2_VERSION "2.0.10")
-set(LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
-set(SDL2_DIR ${LIBS_DIR}/SDL2/install)
 
-if(EXISTS "${PROJECT_SOURCE_DIR}/external-libs/SDL2-${SDL2_VERSION}.tar.gz")
-  message("File exists")
-  set(CURL  "${PROJECT_SOURCE_DIR}/external-libs/SDL2-${SDL2_VERSION}.tar.gz")
+find_package( SDL ${SDL2_VERSION} QUIET )
+if(SDL2_FOUND)
+    set (SDL2_TARGET_LINK_LIBRARIES   
+        SDL2::SDL2main SDL2::SDL2-static )
 else()
-  message("File not exists download")
-  set(CURL  "http://www.libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz")
+    set(SDL2_DIR ${LIBS_DIR}/SDL2/install)
+    include(cmake/SDL2-external.cmake)
+    
+    set(SDL2_INCLUDE_DIRS ${SDL2_DIR}/include/SDL2)
+    set(SDL2_LIB_DIR ${SDL2_DIR}/lib)
+    set(SDL2_TARGET_LINK_LIBRARIES  
+        SDL2d SDL2maind
+        user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
 endif()
 
-# SDL library
-ExternalProject_Add(sdl2_project
-    URL ${CURL}
-    PREFIX ${LIBS_DIR}/SDL2
-    DOWNLOAD_DIR ${PROJECT_SOURCE_DIR}/external-libs
-    CMAKE_ARGS "-DBUILD_SHARED_LIBS:BOOL=OFF" "-DCMAKE_INSTALL_PREFIX:PATH=${SDL2_DIR}"
-    BUILD_BYPRODUCTS ${LIBS_DIR}/SDL2/sdl2_project-build/install/lib/SDL2d.lib
-    UPDATE_DISCONNECTED ON
-)
-
-set(SDL2_INCLUDE_DIR ${SDL2_DIR}/include/SDL2)
-set(SDL2_LIB_DIR ${SDL2_DIR}/lib)
-
-include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIRS})
 link_directories(${SDL2_LIB_DIR})
 
+file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+add_executable( sdl2-demo ${SRC_FILES})
+if (NOT SDL2_FOUND)
+    add_dependencies(sdl2-demo sdl2_external_lib)
+endif()
 
-add_executable( sdl2-demo
-    "src/main.cpp"
-    "src/draw.cpp"
-    )
+set_project_warnings( sdl2-demo )
 
-target_link_libraries( sdl2-demo
-SDL2maind SDL2d
-user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32  setupapi shell32 dinput8
-#	SDL2::SDL2main
-#	SDL2::SDL2-static
-)
-
-add_dependencies(sdl2-demo sdl2_project)
-
-
-
+message("{SDL2_DIR}     = ${SDL2_DIR}")
+message("{SDL2_DIR}     = ${SDL2_DIR}")
+message("{SDL2_LIB_DIR} = ${SDL2_LIB_DIR}")
+message("{LIBS_DIR}     = ${LIBS_DIR}")
+target_link_libraries( sdl2-demo ${SDL2_TARGET_LINK_LIBRARIES} )
