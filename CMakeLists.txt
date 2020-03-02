@@ -23,9 +23,27 @@ else()
     
     set(SDL2_INCLUDE_DIRS ${SDL2_DIR}/include/SDL2)
     set(SDL2_LIB_DIR ${SDL2_DIR}/lib)
+    if(APPLE)
+	find_library(ObjC Objc)
+	find_library(Cocoa Cocoa)
+	find_library(AudioToolbox AudioToolbox)
+	find_library(CoreAudio CoreAudio)
+	find_library(Carbon Carbon)
+	find_library(ForceFeedback ForceFeedback)
+	find_library(IOKit IOKit)
+	find_library(CoreVideo CoreVideo)
+	set(SDL2_TARGET_LINK_LIBRARIES m iconv 
+		${ObjC} ${Cocoa} ${AudioToolbox} 
+		${CoreAudio} ${Carbon} ${ForceFeedback} 
+		${IOKit} ${CoreVideo}
+		libSDL2.a libSDL2Main.a )  
+    elseif(WIN32)
     set(SDL2_TARGET_LINK_LIBRARIES  
         SDL2d SDL2maind
         user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
+    elseif(UNIX)
+    set(SDL2_TARGET_LINK_LIBRARIES  )
+    endif()
 endif()
 
 include_directories(${SDL2_INCLUDE_DIRS})
