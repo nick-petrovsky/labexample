@@ -13,10 +13,12 @@ include(cmake/StaticAnalyzers.cmake)
 
 set(SDL2_VERSION "2.0.10")
 
-find_package( SDL ${SDL2_VERSION} QUIET )
+#find_package( SDL2 ${SDL2_VERSION}  )
+find_package( SDL2 QUIETE )
 if(SDL2_FOUND)
-    set (SDL2_TARGET_LINK_LIBRARIES   
-        SDL2::SDL2main SDL2::SDL2-static )
+    set (SDL2_TARGET_LINK_LIBRARIES SDL2 )
+#    set (SDL2_TARGET_LINK_LIBRARIES   
+#        SDL2::SDL2main SDL2::SDL2-static )
 else()
     set(SDL2_DIR ${LIBS_DIR}/SDL2/install)
     include(cmake/SDL2-external.cmake)

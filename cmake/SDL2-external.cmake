@@ -11,6 +11,7 @@ endif()
 # SDL library
 ExternalProject_Add(sdl2_external_lib
     URL ${CURL}
+    URL_MD5  5a2114f2a6f348bdab5bf52b994811db
     PREFIX ${LIBS_DIR}/SDL2
     DOWNLOAD_DIR ${PROJECT_SOURCE_DIR}/external-libs
     CMAKE_ARGS "-DBUILD_SHARED_LIBS:BOOL=OFF" 
