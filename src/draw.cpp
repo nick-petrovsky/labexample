@@ -1,5 +1,7 @@
-﻿
-#include "draw.h"
+﻿#include "draw.h"
+
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #define RGB32(r, g, b) static_cast<uint32_t>((((static_cast<uint32_t>(b) << 8) | g) << 8) | r)
 
@@ -25,6 +27,10 @@ Uint32 get_pixel32(SDL_Surface *surface, int x, int y)
 
 void draw(SDL_Surface *s)
 {
+  glm::vec4 Position = glm::vec4(glm::vec3(0.0f), 1.0f);
+  glm::mat4 Model = glm::translate(    glm::mat4(1.0f), glm::vec3(1.0f));
+  glm::vec4 Transformed = Model * Position;
+
   // Ваш код
   // ...
   for (int i = 30; i < 100; i++)
