@@ -9,6 +9,11 @@ CMakeFiles/
 cmake_install.cmake
 compile_commands.json
 
+# Ninja
+.ninja_deps
+.ninja_log
+build.ninja
+
 #XCode
 .DS_Store
 CMakeScripts/
