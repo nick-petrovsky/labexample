@@ -24,6 +24,7 @@ add_custom_target(external_all)
 set_target_properties(external_all PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
 if(SDL2_FOUND)  
+  message ("Development library SDL2 found in system")
   set (SDL2_TARGET_LINK_LIBRARIES SDL2 )
 else()
    include(cmake-ext/SDL2-external.cmake)
@@ -42,11 +43,13 @@ else()
     		${ObjC} ${Cocoa} ${AudioToolbox} 
 		    ${CoreAudio} ${Carbon} ${ForceFeedback} 
         ${IOKit} ${CoreVideo} ${Metal}
-        libSDL2$<$<CONFIG:Debug>:d>.a
+        #libSDL2$<$<CONFIG:Debug>:d>.a
+        libSDL2.a
         )  
     elseif(WIN32) #Windows
         set(SDL2_TARGET_LINK_LIBRARIES  
-            SDL2$<$<CONFIG:Debug>:d> SDL2main$<$<CONFIG:Debug>:d>
+            #SDL2$<$<CONFIG:Debug>:d> SDL2main$<$<CONFIG:Debug>:d>
+            SDL2 SDL2main
             user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
     elseif(UNIX AND NOT APPLE) #Linux and etc.
         set(SDL2_TARGET_LINK_LIBRARIES dl m pthread SDL2 )
@@ -54,6 +57,8 @@ else()
 endif()
 
 if (glm_FOUND)
+  message ("Development library glm found in system")
+  set (glm_TARGET_LINK_LIBRARIES glm )
 else()
   include(cmake-ext/glm-external.cmake)
 endif()
@@ -65,4 +70,4 @@ file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 add_executable( sdl2-demo ${SRC_FILES})
 add_dependencies(sdl2-demo external_all)
 set_project_warnings( sdl2-demo )
-target_link_libraries( sdl2-demo PRIVATE ${SDL2_TARGET_LINK_LIBRARIES} )
+target_link_libraries( sdl2-demo PRIVATE ${SDL2_TARGET_LINK_LIBRARIES} ${glm_TARGET_LINK_LIBRARIES})
