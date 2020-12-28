@@ -43,12 +43,10 @@ else()
     		${ObjC} ${Cocoa} ${AudioToolbox} 
 		    ${CoreAudio} ${Carbon} ${ForceFeedback} 
         ${IOKit} ${CoreVideo} ${Metal}
-        #libSDL2$<$<CONFIG:Debug>:d>.a
         libSDL2.a
         )  
     elseif(WIN32) #Windows
         set(SDL2_TARGET_LINK_LIBRARIES  
-            #SDL2$<$<CONFIG:Debug>:d> SDL2main$<$<CONFIG:Debug>:d>
             SDL2 SDL2main
             user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
     elseif(UNIX AND NOT APPLE) #Linux and etc.
