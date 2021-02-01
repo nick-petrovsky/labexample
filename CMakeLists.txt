@@ -1,66 +1,71 @@
 cmake_minimum_required( VERSION 3.11 )
 
-# Óêàæåì èìÿ ïðîåêòà êàê sdl2-demo
+cmake_policy(SET CMP0014 NEW)
+set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE ) 
+
 project( sdl2-demo C CXX)
 
-set(LIBS_DIR ${PROJECT_SOURCE_DIR}/libs)
+set (PROJECT_DOWNLOAD_DIR ${PROJECT_SOURCE_DIR}/external-libs )
 
-include(cmake/StandardProjectSettings.cmake)
-include(cmake/CompilerWarnings.cmake)
-include(cmake/Sanitizers.cmake)
+include(cmake-ext/StandardProjectSettings.cmake)
+include(cmake-ext/CompilerWarnings.cmake)
+include(cmake-ext/Sanitizers.cmake)
 enable_sanitizers(project_options)
-include(cmake/StaticAnalyzers.cmake)
+include(cmake-ext/StaticAnalyzers.cmake)
+include(cmake-ext/FileOrUrl.cmake)
 
-set(SDL2_VERSION "2.0.10")
+set(SDL2_VERSION "2.0.14" )
+set(GLM_VERSION  "0.9.9.8")
+find_package( glm )
+find_package( SDL2 )
 
-#find_package( SDL2 ${SDL2_VERSION}  )
-find_package( SDL2 QUIET )
-if(SDL2_FOUND)
-    set (SDL2_TARGET_LINK_LIBRARIES SDL2 )
-#    set (SDL2_TARGET_LINK_LIBRARIES   
-#        SDL2::SDL2main SDL2::SDL2-static )
+include(ExternalProject)
+add_custom_target(external_all)
+set_target_properties(external_all PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+if(SDL2_FOUND)  
+  message ("Development library SDL2 found in system")
+  set (SDL2_TARGET_LINK_LIBRARIES SDL2 )
 else()
-    set(SDL2_DIR ${LIBS_DIR}/SDL2/install)
-    include(cmake/SDL2-external.cmake)
-    
-    set(SDL2_INCLUDE_DIRS ${SDL2_DIR}/include/SDL2)
-    set(SDL2_LIB_DIR ${SDL2_DIR}/lib)
-    if(APPLE)
-	find_library(ObjC Objc)
-	find_library(Cocoa Cocoa)
-	find_library(AudioToolbox AudioToolbox)
-	find_library(CoreAudio CoreAudio)
-	find_library(Carbon Carbon)
-	find_library(ForceFeedback ForceFeedback)
-	find_library(IOKit IOKit)
-	find_library(CoreVideo CoreVideo)
-	set(SDL2_TARGET_LINK_LIBRARIES m iconv 
-		${ObjC} ${Cocoa} ${AudioToolbox} 
-		${CoreAudio} ${Carbon} ${ForceFeedback} 
-		${IOKit} ${CoreVideo}
-		libSDL2.a libSDL2Main.a )  
-    elseif(WIN32)
-    set(SDL2_TARGET_LINK_LIBRARIES  
-        SDL2d SDL2maind
-        user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
-    elseif(UNIX AND NOT APPLE)
-    set(SDL2_TARGET_LINK_LIBRARIES dl m pthread SDL2 )
-    endif()
+   include(cmake-ext/SDL2-external.cmake)
+
+    if(APPLE) # Apple OS X
+	    find_library(ObjC Objc)
+	    find_library(Cocoa Cocoa)
+	    find_library(AudioToolbox AudioToolbox)
+	    find_library(CoreAudio CoreAudio)
+	    find_library(Carbon Carbon)
+	    find_library(ForceFeedback ForceFeedback)
+	    find_library(IOKit IOKit)
+	    find_library(CoreVideo CoreVideo)
+      find_library(Metal Metal)
+	    set(SDL2_TARGET_LINK_LIBRARIES m iconv 
+    		${ObjC} ${Cocoa} ${AudioToolbox} 
+		    ${CoreAudio} ${Carbon} ${ForceFeedback} 
+        ${IOKit} ${CoreVideo} ${Metal}
+        libSDL2.a
+        )  
+    elseif(WIN32) #Windows
+        set(SDL2_TARGET_LINK_LIBRARIES  
+            SDL2 SDL2main
+            user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
+    elseif(UNIX AND NOT APPLE) #Linux and etc.
+        set(SDL2_TARGET_LINK_LIBRARIES dl m pthread SDL2 )
+    endif() # OS
 endif()
 
-include_directories(${SDL2_INCLUDE_DIRS})
+if (glm_FOUND)
+  message ("Development library glm found in system")
+  set (glm_TARGET_LINK_LIBRARIES glm )
+else()
+  include(cmake-ext/glm-external.cmake)
+endif()
+
+include_directories(${SDL2_INCLUDE_DIR} ${GLM_INCLUDE_DIR})
 link_directories(${SDL2_LIB_DIR})
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 add_executable( sdl2-demo ${SRC_FILES})
-if (NOT SDL2_FOUND)
-    add_dependencies(sdl2-demo sdl2_external_lib)
-endif()
-
+add_dependencies(sdl2-demo external_all)
 set_project_warnings( sdl2-demo )
-
-message("{SDL2_DIR}     = ${SDL2_DIR}")
-message("{SDL2_DIR}     = ${SDL2_DIR}")
-message("{SDL2_LIB_DIR} = ${SDL2_LIB_DIR}")
-message("{LIBS_DIR}     = ${LIBS_DIR}")
-target_link_libraries( sdl2-demo ${SDL2_TARGET_LINK_LIBRARIES} )
+target_link_libraries( sdl2-demo PRIVATE ${SDL2_TARGET_LINK_LIBRARIES} ${glm_TARGET_LINK_LIBRARIES})
