@@ -50,7 +50,9 @@ else()
             SDL2 SDL2main
             user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
     elseif(UNIX AND NOT APPLE) #Linux and etc.
-        set(SDL2_TARGET_LINK_LIBRARIES dl m pthread SDL2 )
+	    set(SDL2_TARGET_LINK_LIBRARIES pthread SDL2 dbus-1 dl )
+	    string(APPEND CMAKE_EXE_LINKER_FLAGS "-pthread -Wl,--no-undefined ")
+	    string(APPEND CMAKE_EXE_LINKER_FLAGS "-ldl -Wl,--as-needed ")
     endif() # OS
 endif()
 

@@ -1,6 +1,7 @@
 external-libs/
 libs/
 out/
+build/
 
 sdl2-demo
 Makefile
