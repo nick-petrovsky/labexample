@@ -1,4 +1,5 @@
-external-libs/
+external-libs/*
+!external-libs/.keep
 libs/
 out/
 build/
