@@ -39,7 +39,7 @@ if(APPLE) # Apple OS X
     )
 elseif(WIN32) #Windows
   set(SDL2_TARGET_LINK_LIBRARIES  
-      SDL2 SDL2main
+      SDL2-staticd SDL2maind
       user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
 elseif(UNIX AND NOT APPLE) #Linux and etc.
   set(SDL2_TARGET_LINK_LIBRARIES pthread SDL2 dbus-1 dl )
