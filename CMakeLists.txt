@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 3.11 )
 
 cmake_policy(SET CMP0014 NEW)
-set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE ) 
+set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
 
 project( sdl2-demo C CXX)
 
@@ -31,14 +31,14 @@ if(APPLE) # Apple OS X
   find_library(IOKit IOKit)
   find_library(CoreVideo CoreVideo)
   find_library(Metal Metal)
-  set(SDL2_TARGET_LINK_LIBRARIES m iconv 
-    ${ObjC} ${Cocoa} ${AudioToolbox} 
-    ${CoreAudio} ${Carbon} ${ForceFeedback} 
+  set(SDL2_TARGET_LINK_LIBRARIES m iconv
+    ${ObjC} ${Cocoa} ${AudioToolbox}
+    ${CoreAudio} ${Carbon} ${ForceFeedback}
     ${IOKit} ${CoreVideo} ${Metal}
     libSDL2.a
     )
 elseif(WIN32) #Windows
-  set(SDL2_TARGET_LINK_LIBRARIES  
+  set(SDL2_TARGET_LINK_LIBRARIES
       SDL2-staticd SDL2maind
       user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
 elseif(UNIX AND NOT APPLE) #Linux and etc.
