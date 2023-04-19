@@ -80,6 +80,9 @@ int main(int argc, char *argv[])
             case SDL_SCANCODE_KP_MINUS:
               printf("SDL_SCANCODE_KP_MINUS have been presssed\n");
               break;
+            case SDL_SCANCODE_ESCAPE:
+              quit = true;
+              break;
             default:
               break;
             }
