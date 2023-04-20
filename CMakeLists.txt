@@ -19,7 +19,7 @@ add_custom_target(external_all)
 set_target_properties(external_all PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
 ### SDL2
-set(SDL2_VERSION "2.26.3")
+set(SDL2_VERSION "2.26.5")
 include(cmake-ext/SDL2-external.cmake)
 if(APPLE) # Apple OS X
   find_library(ObjC Objc)
@@ -31,10 +31,12 @@ if(APPLE) # Apple OS X
   find_library(IOKit IOKit)
   find_library(CoreVideo CoreVideo)
   find_library(Metal Metal)
+  find_library(GameController GameController)
+  find_library(CoreHaptics CoreHaptics) 
   set(SDL2_TARGET_LINK_LIBRARIES m iconv
     ${ObjC} ${Cocoa} ${AudioToolbox}
     ${CoreAudio} ${Carbon} ${ForceFeedback}
-    ${IOKit} ${CoreVideo} ${Metal}
+    ${IOKit} ${CoreVideo} ${Metal} ${GameController} ${CoreHaptics}
     libSDL2.a
     )
 elseif(WIN32) #Windows
