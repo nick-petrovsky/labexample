@@ -1,7 +1,8 @@
 cmake_minimum_required( VERSION 3.11 )
 
 cmake_policy(SET CMP0014 NEW)
-set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
+cmake_policy(SET CMP0135 NEW)
+#set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
 
 project( sdl2-demo C CXX)
 
@@ -32,7 +33,7 @@ if(APPLE) # Apple OS X
   find_library(CoreVideo CoreVideo)
   find_library(Metal Metal)
   find_library(GameController GameController)
-  find_library(CoreHaptics CoreHaptics) 
+  find_library(CoreHaptics CoreHaptics)
   set(SDL2_TARGET_LINK_LIBRARIES m iconv
     ${ObjC} ${Cocoa} ${AudioToolbox}
     ${CoreAudio} ${Carbon} ${ForceFeedback}
@@ -40,9 +41,16 @@ if(APPLE) # Apple OS X
     libSDL2.a
     )
 elseif(WIN32) #Windows
-  set(SDL2_TARGET_LINK_LIBRARIES
-      SDL2-staticd SDL2maind
-      user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
+  if(MSVC)
+    set(SDL2_TARGET_LINK_LIBRARIES
+        SDL2-static$<$<CONFIG:Debug>:d> SDL2main$<$<CONFIG:Debug>:d>
+        user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
+  elseif(MINGW) # pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-cmake
+    set(SDL2_TARGET_LINK_LIBRARIES
+        mingw32 SDL2main SDL2 m user32 gdi32
+		    winmm imm32 ole32 oleaut32 version uuid advapi32
+		    setupapi shell32 dinput8)
+  endif()
 elseif(UNIX AND NOT APPLE) #Linux and etc.
   set(SDL2_TARGET_LINK_LIBRARIES pthread SDL2 dbus-1 dl )
   string(APPEND CMAKE_EXE_LINKER_FLAGS "-pthread -Wl,--no-undefined ")

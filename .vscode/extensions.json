@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "streetsidesoftware.code-spell-checker",
+        "streetsidesoftware.code-spell-checker-russian",
+        "EditorConfig.EditorConfig"
+    ]
+}
