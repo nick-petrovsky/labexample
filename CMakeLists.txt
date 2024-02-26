@@ -1,7 +1,10 @@
 cmake_minimum_required( VERSION 3.11 )
 
 cmake_policy(SET CMP0014 NEW)
-cmake_policy(SET CMP0135 NEW)
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)
+endif()
+
 #set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
 
 project( sdl2-demo C CXX)
