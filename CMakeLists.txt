@@ -23,7 +23,7 @@ add_custom_target(external_all)
 set_target_properties(external_all PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
 ### SDL2
-set(SDL2_VERSION "2.26.5")
+set(SDL2_VERSION "2.32.6")
 include(cmake-ext/SDL2-external.cmake)
 if(APPLE) # Apple OS X
   find_library(ObjC Objc)

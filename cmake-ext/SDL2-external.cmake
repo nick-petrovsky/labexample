@@ -1,6 +1,6 @@
 # SDL library
 URL_OR_FILE(  "${PROJECT_DOWNLOAD_DIR}/SDL2-${SDL2_VERSION}.tar.gz"
-              "http://www.libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz" 
+	      "https://github.com/libsdl-org/SDL/releases/download/release-${SDL2_VERSION}/SDL2-${SDL2_VERSION}.tar.gz"
 )
 
 set(SDL2_INSTALL_PREFIX      ${CMAKE_BINARY_DIR}/external-libs/installed)
@@ -10,7 +10,7 @@ set(SDL2_LIB_DIR     ${SDL2_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/lib)
 ExternalProject_Add(SDL2-external
   URL ${CURL}
   PREFIX ${SDL2_INSTALL_PREFIX}/source-tree
-  URL_MD5 47f22c109070431ecccd90abd3c0ab6e
+  URL_MD5 6281888252b7cb2add559bb98715a055
   DOWNLOAD_DIR ${PROJECT_DOWNLOAD_DIR}
   CMAKE_ARGS 
         -DCMAKE_INSTALL_PREFIX=${SDL2_INSTALL_PREFIX}
